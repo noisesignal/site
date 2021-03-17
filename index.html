@@ -1,1 +1,302 @@
-<html><body><h1>It works!</h1></body></html>
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+
+body { background: black; }
+
+@keyframes stretch {
+  0% {
+    opacity: 1; 
+    transform: scale(1, 1);
+    background-color: #00BFFF; /* Blue  */
+    border-radius: 100%;
+  }
+  50% {
+    opacity: 0.5;
+    background-color: #00BFFF;  /* Blue  */
+    border-radius: 100%;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(4, 4);
+    border-radius: 100%;
+    background-color: #00BFFF;  /* Blue  */
+  }
+}
+</style>
+
+</head>
+<body>
+<script>
+
+class SvgFrame {
+  constructor(height, width, id) {
+    this.identite = id;
+    this.svgElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    this.svgElement.setAttribute("height",height);
+    this.svgElement.setAttribute("width",width);
+    document.body.appendChild(this.svgElement);
+    document.getElementsByTagName("svg")[0].setAttribute("id", this.identite);
+  }
+
+ InitSvgFrame() { 
+    document.getElementById(this.identite).style.position = "absolute";
+    document.getElementById(this.identite).style.top = 5 + "px";
+    document.getElementById(this.identite).style.left = 5 + "px";
+ }
+
+  GetSvgElement() {
+    return this.svgElement;
+  }
+}
+
+(function() { var svgFrame = {};
+                  svgFrame.CreateSvgFrame = function () {
+                  svgFrameInstance = new SvgFrame(1800,1800,"myid");
+                  svgFrameInstance.InitSvgFrame();
+                  } 
+                 window.svgFrame = svgFrame;
+})()
+svgFrame.CreateSvgFrame();
+
+function TestAttributeExistence(Attribute){
+  if (Attribute === false) {return true};
+     return false;
+}
+
+var CountId =0;
+function CreateRoundPath(Xpath, Ypath, Percent, Line_lenght) {
+var rondElement = document.createElementNS("http://www.w3.org/2000/svg", "path");
+rondElement.setAttribute('d', `M ${Xpath},${Ypath} a 10 10 0 0 0 20,0 a 10 10 0 0 0 -20,0`);
+rondElement.setAttribute('stroke','blue');
+rondElement.setAttribute('stroke-width',0.0);
+svgFrameInstance.GetSvgElement().appendChild(rondElement);
+
+if (TestAttributeExistence(document.getElementsByTagName("path")[document.getElementsByTagName("path").length-1].hasAttribute("id"))) {
+document.getElementsByTagName("path")[document.getElementsByTagName("path").length-1].setAttribute("id","rond" + CountId);
+};
+
+document.getElementById("rond" + CountId).style.fill = '#00BFFF';
+var path = document.getElementById("rond" + CountId);
+var pathLength = Math.floor(path.getTotalLength());
+
+ prcnt = (Percent * pathLength) / 100;
+ pt = path.getPointAtLength(prcnt);
+var Xcenter = Xpath+10 , Ycenter = Ypath;
+CreateDiv(Xcenter, Ycenter, CountId);
+var retr = DetermineCoordinates(Xcenter, Ycenter, pt.x, pt.y);
+if (pt.x > (Xpath+10)) {MadeDistance2(pt.x, 800, retr.equation, Line_lenght); };
+if (pt.x < (Xpath+10)) {MadeDistance(0, pt.x, retr.equation, Line_lenght); };
+CountId+=1;
+}
+
+function MadeDistance(StartPoint, EndPoint, Equation, Length) {
+var result;
+  while (StartPoint <= EndPoint) {  
+  result = DistanceTwoPoints(StartPoint, Equation(StartPoint), EndPoint, Equation(EndPoint));
+  if (result <= Length)  {
+       CreateLine(StartPoint, Equation(StartPoint), EndPoint, Equation(EndPoint));       
+    //    CreateEdgePath(20,50,30,30,StartPoint-40, Equation(StartPoint));
+         StoreValues(StartPoint-50, Equation(StartPoint));
+    // CreateCubes(30,StartPoint-40,Equation(StartPoint));
+        break;
+      };
+       StartPoint+=0.0001;
+    };
+}
+
+function MadeDistance2(StartPoint, EndPoint, Equation, Length) {
+var result; var InitPoint = StartPoint; 
+while (StartPoint <= EndPoint) { 
+result = DistanceTwoPoints(InitPoint, Equation(InitPoint), StartPoint, Equation(StartPoint));
+  if (result >= Length)  {
+    CreateLine(InitPoint, Equation(InitPoint), StartPoint, Equation(StartPoint)); 
+  //  CreateEdgePath(20,50,30,30,StartPoint-40,Equation(StartPoint));
+    StoreValues(StartPoint-50, Equation(StartPoint));
+  // CreateCubes(30,StartPoint-40,Equation(StartPoint));
+    break;   
+  };
+  StartPoint+=0.0001;
+  };
+}
+
+function DistanceTwoPoints(Xa, Ya, Xb, Yb) {
+  var distance = Math.sqrt(((Xb - Xa)*(Xb - Xa)) + ((Yb - Ya)*(Yb - Ya)));
+   return distance;
+}
+
+function DetermineCoordinates(Xcenter, Ycenter, Xborder, Yborder) {
+var Xa, Xb, Ya, Yb;
+  if (Xcenter >= Xborder) {Xa = Xborder; Ya = Yborder; Xb = Xcenter; Yb = Ycenter};
+  if (Xborder >= Xcenter) {Xa = Xcenter; Ya = Ycenter; Xb = Xborder; Yb = Yborder};
+var retr = CoefficientCalculus(Xa, Ya, Xb, Yb);
+return retr;
+}
+
+function CoefficientCalculus(Xc, Yc, Xe, Ye) {
+var m = ((Ye - Yc) / (Xe - Xc));
+var p, Y, equation;
+if ((Xc * m) > Yc) { p = (Xc * m) - Yc; 
+ equation = function(abs) {
+     Y = (abs * m) - p;
+      return Y; 
+ };
+};
+if ((Xc * m) < Yc) { p = Yc - (Xc * m)
+ equation = function(abs) {
+      Y = (abs * m) + p;
+      return Y; 
+ };
+};
+return {
+  p : p,
+  m : m,
+  equation : equation
+};
+}
+
+function CreateLine(x1, y1, x2, y2) {
+var lineElement = document.createElementNS("http://www.w3.org/2000/svg", "line");
+lineElement.setAttribute("x1",x1);
+lineElement.setAttribute("y1",y1);
+lineElement.setAttribute("x2",x2);
+lineElement.setAttribute("y2",y2);
+lineElement.setAttribute("stroke-width",2);
+lineElement.setAttribute("stroke","#00BFFF");
+svgFrameInstance.GetSvgElement().appendChild(lineElement);
+}
+
+function CreateDiv(x, y, count) {
+var divElement = document.createElement("div");
+document.body.appendChild(divElement);
+//if (TestAttributeExistence(document.getElementsByTagName("div")[count].hasAttribute("id"))) {
+  document.getElementsByTagName("div")[count].setAttribute("id", "divid" + count);
+//};
+
+document.getElementById("divid" + count).style.borderRadius = "250%";
+document.getElementById("divid" + count).style.animationDuration = "2s";
+document.getElementById("divid" + count).style.animationIterationCount = "infinite";
+document.getElementById("divid" + count).style.animationPlayState = "running";
+document.getElementById("divid" + count).style.animationFillMode = "none";
+document.getElementById("divid" + count).style.margin = "0";
+document.getElementById("divid" + count).style.animationDelay = "0s";
+document.getElementById("divid" + count).style.height = "10px" ;
+document.getElementById("divid" + count).style.width = "10px";
+document.getElementById("divid" + count).style.position = "absolute";
+document.getElementById("divid" + count).style.top = y + "px";
+document.getElementById("divid" + count).style.left = x + "px";
+document.getElementById("divid" + count).style.animationName = "stretch";
+}
+   
+var Counter =0;
+function CreateEdgePath(angleX, angleY, length1, length2, positionX, positionY) {
+
+        var nodes = [[-1, -1, -1], [-1, -1, 1], [-1, 1, -1], [-1, 1, 1],
+        [1, -1, -1], [1, -1, 1], [1, 1, -1], [1, 1, 1]];
+ 
+        var edges = [[0, 1], [1, 3], [3, 2], [2, 0], [4, 5], [5, 7], [7, 6],
+        [6, 4], [0, 4], [1, 5], [2, 6], [3, 7]];
+
+edges.forEach(function (edge) {
+  var PointA = nodes[edge[0]];
+  var PointB = nodes[edge[1]];
+  var retr = RotateAroundZCenter3D(PointA[0]*length1,PointA[1]*length2,PointA[2]*length2,
+                                   PointB[0]*length1,PointB[1]*length2,PointB[2]*length2,
+                                   angleX, angleY, positionX, positionY);       
+
+var EdgeElement = document.createElementNS("http://www.w3.org/2000/svg", "path");
+EdgeElement.setAttribute('d', `M ${retr.X1point} ${retr.Y1point} L ${retr.X2point} ${retr.Y2point} Z`);
+EdgeElement.setAttribute('stroke','#00BFFF');
+EdgeElement.setAttribute('stroke-width',1.8);
+svgFrameInstance.GetSvgElement().appendChild(EdgeElement);
+
+if (TestAttributeExistence(document.getElementsByTagName("path")[document.getElementsByTagName("path").length-1].hasAttribute("id"))) {
+document.getElementsByTagName("path")[document.getElementsByTagName("path").length-1].setAttribute("id","cube" + Counter);
+}
+document.getElementById("cube" + Counter).style.fill = 'pink';
+Counter+=1;
+ });
+}
+
+function RotateAroundZCenter3D(Xa, Ya, Za, Xb, Yb, Zb, angleX, angleY, positionX, positionY) {  // This is a valid rotation around Z axis
+var tempA , tempB;
+ X1 = ((Xa * Math.cos(angleX/(180/Math.PI))) + (Za * Math.sin(angleX/(180/Math.PI)))) + positionX ;
+ Z1 = ((Za * Math.cos(angleX/(180/Math.PI))) - (Xa * Math.sin(angleX/(180/Math.PI)))) + positionX ;
+ tempA = Z1-positionX;
+ Y1 = ((Ya * Math.cos(angleY/(180/Math.PI)))) + ((tempA) * Math.sin(angleY/(180/Math.PI))) + positionY ;
+ Z1 = ((tempA * Math.cos(angleY/(180/Math.PI))) - (Ya * Math.sin(angleY/(180/Math.PI)))) + positionY ;
+
+ X2 = ((Xb *  Math.cos(angleX/(180/Math.PI))) + (Zb *Math.sin(angleX/(180/Math.PI)))) + positionX ;
+ Z2 = ((Zb *  Math.cos(angleX/(180/Math.PI))) - ((Xb) *  Math.sin(angleX/(180/Math.PI)))) + positionX ;
+ tempB = Z2-positionX;
+ Y2 = (((Yb) * Math.cos(angleY/(180/Math.PI)))) + ((tempB * Math.sin(angleY/(180/Math.PI)))) + positionY;
+ Z2 = ((tempB * Math.cos(angleY/(180/Math.PI)))  - ((Yb) * Math.sin(angleY/(180/Math.PI)))) + positionY;
+ 
+return {
+X1point : X1,
+Y1point : Y1,
+X2point : X2,
+Y2point : Y2
+};
+}
+
+function CreateCubes(ArrayCord, LengthEdge) {
+var Nb = 0; var j = 0; var i = 0; 
+
+while (Nb <= ArrayCord.length) {
+      CreateEdgePath(0,0,0,0,0,0);
+      Nb+=1;
+  }
+Nb = 0;
+
+while ( i < 3600) { 
+  (function (i) {   
+    setTimeout(function () {
+   var  j = 0;    
+    while (j < (ArrayCord.length)*12) {
+  var elem0 = document.getElementById("cube" + j);
+  elem0.remove(); 
+  j+=1;
+                   }            
+Counter=0;   j =0;  
+
+while(Nb < ArrayCord.length) {
+CreateEdgePath(i,i-7,LengthEdge,LengthEdge,ArrayCord[Nb][0],ArrayCord[Nb][1]);   
+ Nb+=1;
+              }              
+ Nb=0; 
+    }, 30*i);
+  })(i);
+  i+=1;
+  }
+};
+
+var comptage = 0;
+var myarray = [];
+
+function StoreValues(val1, val2){
+if (val1 != null && val2 != null) {
+myarray[comptage] = [];
+myarray[comptage][0] = val1; 
+myarray[comptage][1] = val2;
+comptage+=1;
+ }
+if(myarray.length === 4) {CreateCubes(myarray,30);comptage=0;}
+}
+
+    
+(function CreateForms(NbElements) {
+var counterBase = 0; var counter; var counter2; var counter3 = 0; counter4 = 0;
+       while (counterBase <= NbElements) { 
+      counter = Math.floor((Math.random() * 600) + 100);
+      counter2 = Math.floor((Math.random() * 600) + 100);              
+       CreateRoundPath(counter, counter2, counter3, 145);       
+          counter3 +=5; counter4+=1; counterBase+=1; counter = 0; counter2 = 0;
+     }
+
+})(3);
+
+  </script>
+</body>
+</html>
