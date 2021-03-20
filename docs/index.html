@@ -51,7 +51,7 @@ class SvgFrame {
   }
 }
 
-(function() { var svgFrame = {};
+(() => { var svgFrame = {};
                   svgFrame.CreateSvgFrame = function () {
                   svgFrameInstance = new SvgFrame(1800,1800,"myid");
                   svgFrameInstance.InitSvgFrame();
@@ -60,13 +60,13 @@ class SvgFrame {
 })()
 svgFrame.CreateSvgFrame();
 
-function TestAttributeExistence(Attribute){
+const TestAttributeExistence = (Attribute) => {
   if (Attribute === false) {return true};
      return false;
 }
 
 var CountId =0;
-function CreateRoundPath(Xpath, Ypath, Percent, Line_lenght) {
+const CreateRoundPath = (Xpath, Ypath, Percent, Line_lenght) => {
 var rondElement = document.createElementNS("http://www.w3.org/2000/svg", "path");
 rondElement.setAttribute('d', `M ${Xpath},${Ypath} a 10 10 0 0 0 20,0 a 10 10 0 0 0 -20,0`);
 rondElement.setAttribute('stroke','blue');
@@ -91,7 +91,7 @@ if (pt.x < (Xpath+10)) {MadeDistance(0, pt.x, retr.equation, Line_lenght); };
 CountId+=1;
 }
 
-function MadeDistance(StartPoint, EndPoint, Equation, Length) {
+const MadeDistance = (StartPoint, EndPoint, Equation, Length) => {
 var result;
   while (StartPoint <= EndPoint) {  
   result = DistanceTwoPoints(StartPoint, Equation(StartPoint), EndPoint, Equation(EndPoint));
@@ -106,7 +106,7 @@ var result;
     };
 }
 
-function MadeDistance2(StartPoint, EndPoint, Equation, Length) {
+const MadeDistance2 = (StartPoint, EndPoint, Equation, Length) => {
 var result; var InitPoint = StartPoint; 
 while (StartPoint <= EndPoint) { 
 result = DistanceTwoPoints(InitPoint, Equation(InitPoint), StartPoint, Equation(StartPoint));
@@ -121,12 +121,12 @@ result = DistanceTwoPoints(InitPoint, Equation(InitPoint), StartPoint, Equation(
   };
 }
 
-function DistanceTwoPoints(Xa, Ya, Xb, Yb) {
+const DistanceTwoPoints = (Xa, Ya, Xb, Yb) => {
   var distance = Math.sqrt(((Xb - Xa)*(Xb - Xa)) + ((Yb - Ya)*(Yb - Ya)));
    return distance;
 }
 
-function DetermineCoordinates(Xcenter, Ycenter, Xborder, Yborder) {
+const DetermineCoordinates = (Xcenter, Ycenter, Xborder, Yborder) => {
 var Xa, Xb, Ya, Yb;
   if (Xcenter >= Xborder) {Xa = Xborder; Ya = Yborder; Xb = Xcenter; Yb = Ycenter};
   if (Xborder >= Xcenter) {Xa = Xcenter; Ya = Ycenter; Xb = Xborder; Yb = Yborder};
@@ -134,17 +134,17 @@ var retr = CoefficientCalculus(Xa, Ya, Xb, Yb);
 return retr;
 }
 
-function CoefficientCalculus(Xc, Yc, Xe, Ye) {
+const CoefficientCalculus = (Xc, Yc, Xe, Ye) => {
 var m = ((Ye - Yc) / (Xe - Xc));
 var p, Y, equation;
 if ((Xc * m) > Yc) { p = (Xc * m) - Yc; 
- equation = function(abs) {
+var equation = (abs) => {
      Y = (abs * m) - p;
       return Y; 
  };
 };
 if ((Xc * m) < Yc) { p = Yc - (Xc * m)
- equation = function(abs) {
+var equation = (abs) => {
       Y = (abs * m) + p;
       return Y; 
  };
@@ -156,7 +156,7 @@ return {
 };
 }
 
-function CreateLine(x1, y1, x2, y2) {
+const CreateLine = (x1, y1, x2, y2) => {
 var lineElement = document.createElementNS("http://www.w3.org/2000/svg", "line");
 lineElement.setAttribute("x1",x1);
 lineElement.setAttribute("y1",y1);
@@ -167,7 +167,7 @@ lineElement.setAttribute("stroke","#00BFFF");
 svgFrameInstance.GetSvgElement().appendChild(lineElement);
 }
 
-function CreateDiv(x, y, count) {
+const CreateDiv = (x, y, count) =>{
 var divElement = document.createElement("div");
 document.body.appendChild(divElement);
 //if (TestAttributeExistence(document.getElementsByTagName("div")[count].hasAttribute("id"))) {
@@ -190,7 +190,7 @@ document.getElementById("divid" + count).style.animationName = "stretch";
 }
    
 var Counter =0;
-function CreateEdgePath(angleX, angleY, length1, length2, positionX, positionY) {
+const CreateEdgePath = (angleX, angleY, length1, length2, positionX, positionY) => {
 
         var nodes = [[-1, -1, -1], [-1, -1, 1], [-1, 1, -1], [-1, 1, 1],
         [1, -1, -1], [1, -1, 1], [1, 1, -1], [1, 1, 1]];
@@ -219,7 +219,7 @@ Counter+=1;
  });
 }
 
-function RotateAroundZCenter3D(Xa, Ya, Za, Xb, Yb, Zb, angleX, angleY, positionX, positionY) {  // This is a valid rotation around Z axis
+const RotateAroundZCenter3D = (Xa, Ya, Za, Xb, Yb, Zb, angleX, angleY, positionX, positionY) => {  // This is a valid rotation around Z axis
 var tempA , tempB;
  X1 = ((Xa * Math.cos(angleX/(180/Math.PI))) + (Za * Math.sin(angleX/(180/Math.PI)))) + positionX ;
  Z1 = ((Za * Math.cos(angleX/(180/Math.PI))) - (Xa * Math.sin(angleX/(180/Math.PI)))) + positionX ;
@@ -241,7 +241,7 @@ Y2point : Y2
 };
 }
 
-function CreateCubes(ArrayCord, LengthEdge) {
+const CreateCubes = (ArrayCord, LengthEdge) => {
 var Nb = 0; var j = 0; var i = 0; 
 
 while (Nb <= ArrayCord.length) {
@@ -251,7 +251,7 @@ while (Nb <= ArrayCord.length) {
 Nb = 0;
 
 while ( i < 3600) { 
-  (function (i) {   
+   ( (i) => {   
     setTimeout(function () {
    var  j = 0;    
     while (j < (ArrayCord.length)*12) {
@@ -272,21 +272,21 @@ CreateEdgePath(i,i-7,LengthEdge,LengthEdge,ArrayCord[Nb][0],ArrayCord[Nb][1]);
   }
 };
 
-var comptage = 0;
+var count_val = 0;
 var myarray = [];
 
-function StoreValues(val1, val2){
+const StoreValues = (val1, val2) => {
 if (val1 != null && val2 != null) {
-myarray[comptage] = [];
-myarray[comptage][0] = val1; 
-myarray[comptage][1] = val2;
-comptage+=1;
+myarray[count_val] = [];
+myarray[count_val][0] = val1; 
+myarray[count_val][1] = val2;
+count_val+=1;
  }
-if(myarray.length === 4) {CreateCubes(myarray,30);comptage=0;}
+if(myarray.length === 4) {CreateCubes(myarray,30);count_val=0;}
 }
 
     
-(function CreateForms(NbElements) {
+(CreateForms = (NbElements) => {
 var counterBase = 0; var counter; var counter2; var counter3 = 0; counter4 = 0;
        while (counterBase <= NbElements) { 
       counter = Math.floor((Math.random() * 600) + 100);
@@ -300,3 +300,4 @@ var counterBase = 0; var counter; var counter2; var counter3 = 0; counter4 = 0;
   </script>
 </body>
 </html>
+
