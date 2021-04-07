@@ -1,6 +1,6 @@
 body {
   font: 1.0em "Fira Sans", sans-serif;
-  background-color: lightblue;
+  background-color: white;
   color: grey;
   line-height: 2;
   max-width: calc(800px - (30px * 2));
@@ -14,7 +14,9 @@ body {
 h1 {
   font: 2.0em "Fira Sans", sans-serif;
 #  color: #a5a8a8;
- line-height: 3;
- border-bottom: 2px solid;
+#color: #32a852;
+color: #3281a8;
+ line-height: 3; 
+# border-bottom: 2px solid #3281a8;
+ border-bottom: 2px solid #32a852;
 }
-
