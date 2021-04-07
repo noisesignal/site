@@ -11,10 +11,10 @@ body {
 }
 
 
+h1 {
+  font: 2.0em "Fira Sans", sans-serif;
+#  color: #a5a8a8;
+ line-height: 3;
+ border-bottom: 2px solid;
 }
 
-h1 {
-  color: navy;
-  margin-left: 20px;
-  border-bottom: 5px solid #e8e8e8;
-}
