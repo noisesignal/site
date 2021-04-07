@@ -2,6 +2,7 @@ body {
   font: 1.0em "Fira Sans", sans-serif;
   background-color: lightblue;
   color: grey;
+  line-height: 2;
 }
 
 h1 {
