@@ -1,6 +1,11 @@
+html {
+	background: #f5debc;
+}
+
+
 body {
   font: 1.0em "Fira Sans", sans-serif;
-  background-color: white;
+#  background-color: ;
   color: grey;
   line-height: 2;
   max-width: calc(800px - (30px * 2));
