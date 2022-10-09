@@ -20,9 +20,11 @@ body {
 
 h1 {
   font: 2.0em "Fira Sans", sans-serif;
-color: #3281a8;
+#color: #3281a8;
 #color: #f35e50;
+color: coral;
  line-height: 3; 
 # border-bottom: 2px solid #3281a8;
- border-bottom: 2px solid #32a852;
+# border-bottom: 2px solid #32a852;
+  border-bottom: 2px solid gainsboro;
 }
